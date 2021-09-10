@@ -1,0 +1,27 @@
+<a href="/cekiai/edit">Pridėti naują</a>
+
+<ul>
+    {{#each list}}
+    <li><a href="/cekiai/edit/{{_id}}">{{dateFormat data}} {{pardavejas.pavadinimas}} {{mokejimuTipas.pavadinimas}}</a> <a href="/cekiai/delete/{{_id}}">X</a>
+    <table>
+        <thead>
+            <tr>
+                <th>Preke</th>
+                <th>Kaina</th>
+                <th>Tipas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each prekes}}
+            <tr>
+                <td>{{pavadinimas}}</td>
+                <td>{{kaina}}</td>
+                <td>{{islaiduTipas.pavadinimas}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    </li>
+    {{/each}}
+</ul>
+<a href="/">Back</a>

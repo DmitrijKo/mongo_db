@@ -1,0 +1,7 @@
+<a href="/mokejimuTipai/edit">Pridėti naują</a>
+<ul>
+    {{#each tipai}}
+    <li><a href="/mokejimuTipai/edit/{{_id}}">{{pavadinimas}}</a> <a href="/mokejimuTipai/delete/{{_id}}">X</a></li>
+    {{/each}}
+</ul>
+<a href="/">Back</a>
