@@ -1,7 +1,7 @@
 import { MongoClient } from "mongodb";
 
-const URL = "mongodb+srv://dmitrij:dmitrij123@test1.gvjce.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-//const URL = "mongodb://localhost:27017";
+// const URL = "mongodb://app.simpledbr.com:27017";
+const URL = "mongodb+srv://dmitrij:dmitrij123@test1.gvjce.mongodb.net/cekiai?retryWrites=true&w=majority";
 const DB_NAME = "cekiai";
 const MAX_TRIES = 3;
 

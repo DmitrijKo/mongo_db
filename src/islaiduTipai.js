@@ -6,6 +6,7 @@ import {
   insertOne,
   updateOne,
 } from "./db/islaiduTipai.js";
+import { PermissionDenied } from "./db/PermissionDenied.js";
 
 export const router = express.Router();
 
@@ -18,7 +19,13 @@ router.get("/", async (req, res) => {
       tipai: records,
     });
   } catch (err) {
-    res.status(500).end(`Įvyko klaida: ${err.message}`);
+    if (err instanceof PermissionDenied) {
+      // rodau klaida apie draudimus
+      res.status(500).end(`Tau drauziama atlikti sita veiksma`);
+    } else {
+      // rodau klaida apie blogai veikiancia DB
+      res.status(500).end(`Įvyko klaida: ${err.message}`);
+    }
   }
 });
 

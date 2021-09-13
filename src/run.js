@@ -11,7 +11,6 @@ import { router as ataskaitosRouter } from "./ataskaitos.js";
 import { login } from "./db/users.js";
 
 const PORT = 3000;
-
 const WEB = "web";
 
 const app = express();
@@ -99,15 +98,15 @@ app.get("/logout", (req, res) => {
 });
 
 // praleis tik prisiloginusius userius
- app.use((req, res, next) => {
-   if (req.session && req.session.userId) {
-     return next();
-   }
-   res.render("login", {
-     title: "Prisijungimas",
-     nextUrl: req.originalUrl,
-   });
- });
+app.use((req, res, next) => {
+  if (req.session && req.session.userId) {
+    return next();
+  }
+  res.render("login", {
+    title: "Prisijungimas",
+    nextUrl: req.originalUrl,
+  });
+});
 
 app.use("/islaiduTipai", islaiduTipaiRouter);
 app.use("/pardavejai", pardavejaiRouter);

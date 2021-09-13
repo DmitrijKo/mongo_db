@@ -1,7 +1,10 @@
 import { ObjectId } from "mongodb";
 import { getDb } from "./db.js";
+import { checkPermission } from "./sec.js";
+import permissions from "../permissions.js";
 
 async function getAll(userId) {
+  await checkPermission(userId, permissions.islaiduTipaiRead);
   const db = await getDb();
   const rows = await db.collection("islaiduTipai").find({}, {
     sort: {
@@ -11,7 +14,10 @@ async function getAll(userId) {
   return rows;
 }
 
-async function getOne(userId, _id) {
+async function getOne(userId, _id, nocheck) {
+  if (nocheck) {
+    await checkPermission(userId, permissions.pardavejaiRead);
+  }
   const db = await getDb();
   if (!(_id instanceof ObjectId)) {
     _id = new ObjectId(_id);
@@ -24,6 +30,7 @@ async function getOne(userId, _id) {
 }
 
 async function deleteOne(userId, _id) {
+  await checkPermission(userId, permissions.islaiduTipaiDelete);
   const db = await getDb();
   if (!(_id instanceof ObjectId)) {
     _id = new ObjectId(_id);
@@ -38,6 +45,7 @@ async function deleteOne(userId, _id) {
 }
 
 async function insertOne(userId, pavadinimas) {
+  await checkPermission(userId, permissions.islaiduTipaiInsert);
   if (typeof pavadinimas !== "string" || pavadinimas.trim() === "") {
     return null;
   }
@@ -50,6 +58,7 @@ async function insertOne(userId, pavadinimas) {
 }
 
 async function updateOne(userId, _id, pavadinimas) {
+  await checkPermission(userId, permissions.islaiduTipaiUpdate);
   if (typeof pavadinimas !== "string" || pavadinimas.trim() === "") {
     return null;
   }

@@ -5,14 +5,19 @@ import { getOne as getIslaiduTipas } from "./islaiduTipai.js";
 import { getOne as getMokejimuTipas } from "./mokejimuTipai.js";
 import { getOne as getPardavejas } from "./pardavejai.js";
 
+import { checkPermission } from "./sec.js";
+import permissions from "../permissions.js";
+
 const URL = "mongodb://app.simpledbr.com:27017";
 
 async function getAll(userId) {
+  await checkPermission(userId, permissions.cekiaiRead);
   const db = await getDb();
   return await db.collection("cekiai").find().toArray();
 }
 
 async function getOne(userId, _id) {
+  await checkPermission(userId, permissions.cekiaiRead);
   const db = await getDb();
   if (!(_id instanceof ObjectId)) {
     _id = new ObjectId(_id);
@@ -25,13 +30,14 @@ async function getOne(userId, _id) {
 }
 
 async function insertOne(userId, cekis) {
+  await checkPermission(userId, permissions.cekiaiInsert);
   const db = await getDb();
-  cekis.pardavejas = await getPardavejas(userId, cekis.pardavejaiId);
+  cekis.pardavejas = await getPardavejas(userId, cekis.pardavejaiId, true);
   if (!cekis.pardavejas) {
     throw new Error("Nezinomas pardavejas");
   }
   delete cekis.pardavejaiId;
-  cekis.mokejimuTipas = await getMokejimuTipas(userId, cekis.mokejimuTipaiId);
+  cekis.mokejimuTipas = await getMokejimuTipas(userId, cekis.mokejimuTipaiId, true);
   if (!cekis.mokejimuTipas) {
     throw new Error("Nezinomas mokejimu tipas");
   }
@@ -41,7 +47,7 @@ async function insertOne(userId, cekis) {
   }
   delete cekis.mokejimuTipaiId;
   for (const preke of cekis.prekes) {
-    preke.islaiduTipas = await getIslaiduTipas(userId, preke.islaiduTipaiId);
+    preke.islaiduTipas = await getIslaiduTipas(userId, preke.islaiduTipaiId, true);
     if (!preke.islaiduTipas) {
       throw new Error("Nezinomas islaidu tipas");
     }
@@ -54,6 +60,7 @@ async function insertOne(userId, cekis) {
 }
 
 async function updateOne(userId, cekis) {
+  await checkPermission(userId, permissions.cekiaiUpdate);
   const db = await getDb();
   cekis._id = new ObjectId(cekis._id);
   const orig = await getOne(userId, cekis._id);
@@ -97,6 +104,7 @@ async function updateOne(userId, cekis) {
 }
 
 async function deleteOne(userId, _id) {
+  await checkPermission(userId, permissions.cekiaiDelete);
   const db = await getDb();
   await db.collection("cekiai").deleteOne({
     _id: ObjectId(_id),
