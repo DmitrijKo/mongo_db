@@ -3,6 +3,20 @@ import { getDb } from "./db.js";
 import { checkPermission } from "./sec.js";
 import permissions from "../permissions.js";
 
+
+/**
+ * <br><i>Operacijos su išlaidu tipais.</br></i>
+ * @namespace islaiduTipai
+ */
+
+/**
+ * <i><br>Grąžina sąrašą visų mokėjimų tipų.</br></i>
+ *
+ * @param {string} userId - šią operaciją atliekančio vartotojo ID
+ * @returns {Array<{_id: MongoId, name: string}>} išlaidų tipų sąrašas
+ * @throws {PermissionDenied} jei vartotojui neleidžiama atlikti šios operacijos
+ * @memberof islaiduTipai
+ */
 async function getAll(userId) {
   await checkPermission(userId, permissions.islaiduTipaiRead);
   const db = await getDb();
@@ -14,6 +28,17 @@ async function getAll(userId) {
   return rows;
 }
 
+
+/**
+ * <br><i>Grąžina mokėjimų tipus pagal id.</br></i>
+ *
+ * @param {string} userId - šią operaciją atliekančio vartotojo ID
+ * @param {string} _id - surasto išlaidų tipo ID
+ * @param {boolean} [nocheck = false] - netikrina prisijungimo leidimo, jei "true"
+ * @returns {{_id: MongoId, name: string}|null} islaidu tipas | null, jeigu nerastas
+ * @throws {PermissionDenied} jei vartotojui neleidžiama atlikti šios operacijos
+ * @memberof islaiduTipai
+ */
 async function getOne(userId, _id, nocheck) {
   if (nocheck) {
     await checkPermission(userId, permissions.pardavejaiRead);
@@ -36,7 +61,6 @@ async function deleteOne(userId, _id) {
     _id = new ObjectId(_id);
   }
   const one = getOne(userId, _id);
-  // TODO: ka daryti su egzistuojanciais tipais cekiuose ?
   if (one) {
     await db.collection("islaiduTipai").deleteOne({ _id });
     return one;

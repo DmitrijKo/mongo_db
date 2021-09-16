@@ -1,12 +1,17 @@
 import { MongoClient } from "mongodb";
 
-// const URL = "mongodb://app.simpledbr.com:27017";
 const URL = "mongodb+srv://dmitrij:dmitrij123@test1.gvjce.mongodb.net/cekiai?retryWrites=true&w=majority";
 const DB_NAME = "cekiai";
 const MAX_TRIES = 3;
 
 let conn;
 
+/**
+ * <i><b>Prisijungia prie sukonfiguruotos duomenų bazės.</b></i>
+ * 
+ * @param {number} [tryCounter = 1] - bandymų skaičius prieš atsisakymą.
+ * @throws {Error} kai nepavyko prisijungti.
+ */
 async function connect(tryCounter) {
   if (!tryCounter) {
     tryCounter = 1;
@@ -26,6 +31,13 @@ async function connect(tryCounter) {
   }
 }
 
+
+/**
+ * <i><b>Testuoja nurodytą ryšį db.stats().</b></i>
+ * 
+ * @param {object} db - jungtis prie "db" duomenų bazės
+ * @returns {boolean} "true" jeigu ryšys yra
+ */
 async function testConnection(db) {
   try {
     await db.stats();
@@ -35,6 +47,14 @@ async function testConnection(db) {
   }
 }
 
+
+/**
+ * <i><b>Grąžina duomenų bazės pavadinimą.</b></i>
+ * <i><b>Prisijungia automatiškai, jei nėra ryšio.</b></i>
+ *
+ * @returns {object} prijungtas ir išbandytas "db" objektas
+ * @throws {Error} kai nepavyko prisijungti
+ */
 async function getDb() {
   if (!conn) {
     await connect();
@@ -47,6 +67,10 @@ async function getDb() {
   return getDb();
 }
 
+
+/**
+ * <b><i>Uždaro ryšį su duomenų baze.</b></i>
+ */
 async function close() {
   try {
     await conn.close();
