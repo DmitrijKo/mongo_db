@@ -1,2 +1,4 @@
-USER: Dmitrij
-PASS: ok
+Visos teisės:
+
+USER: admin
+PASS: root
